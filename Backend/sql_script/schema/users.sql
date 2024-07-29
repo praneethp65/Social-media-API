@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS users (
+    ID INT NOT NULL AUTO_INCREMENT,
+    role VARCHAR(16) NOT NULL DEFAULT 'user',
+    username VARCHAR(16) UNIQUE NOT NULL,
+    about TEXT,
+    dateRegistered DATETIME DEFAULT CURRENT_TIMESTAMP,
+    password VARCHAR(255),
+    email VARCHAR(64) UNIQUE NOT NULL,
+    PRIMARY KEY (ID),
+    FOREIGN KEY (role) REFERENCES roles(name)
+);

@@ -1,0 +1,308 @@
+openapi : 3.0.0
+info:
+  version: 1.0.0
+  title: Social Media API
+  description: A simple social media api called Facegram with user,post,comments and likes
+  contact:
+    name: Praneeth Prasanna
+    email: prasannap@uni.coventry.ac.uk
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+servers:
+  - url: 'https://maydayclub-pressloyal-3001.codio-box.uk/api/v1/'
+    description: Development Server
+
+paths:
+  /users:
+    summary: Represents a user
+    description: >
+      This resource represents a user in the system
+      Each user is identified by their `id`.
+    post:
+      tags:
+        - Users
+      description:
+        Create a new user account on the system.
+      requestBody:
+        description: New user data.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ./user.json#/user
+      responses:
+        '201':
+          description: User account created.
+    get:
+      tags:
+        - Users
+      description:
+        Get list of all users in system
+      responses:
+        '200':
+          description: List of users
+        '403':
+          description: Only admin can view all accounts
+  
+  /users/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: Id of the user
+    get:
+      tags:
+        - Users
+      description:
+        Get user by their id
+      responses:
+        '200':
+          description: User info
+          content:
+            application/json:
+              schema:
+                $ref: ./user.json#/viewUsers
+        '403':
+          description: Non-admins can only view their info
+        '404':
+          description: User not found
+    put:
+      tags:
+        - Users
+      description:
+        Update user using id.
+      requestBody:
+        description: Update a property.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ./user.json#/updateUser
+      responses:
+        '200':
+          description: Confirmation and return users id.
+        '403':
+          description: Users cant change others details.
+        '404':
+          description: User not found
+    delete:
+      tags:
+        - Users
+      description:
+        Delete user using id.
+      responses:
+        '200':
+          description: Confirmation of delete.
+        '403':
+          description: Only admins can delete user accounts.
+        '404':
+          description: User not found
+
+
+  /posts:
+    summary: Represents a post
+    description: >
+      This resource represents an post in the system
+      Each post is identified by a numeric `id`.
+    post:
+      tags:
+        - Posts
+      description:
+        Create a new post.
+      requestBody:
+        description: All new post data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ./post.json#/createPost
+      responses:
+        '201':
+          description: Post created
+        '500':
+          description: Error when creating post
+    get:
+      tags:
+        - Posts
+      description:
+        Get a list of all posts.
+      responses:
+        '200':
+          description: List of posts
+        '404':
+          description: Posts not found
+  
+  /posts/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: Id of the post
+    get:
+      tags:
+        - Posts
+      description:
+        Get post by id.
+      responses:
+        '200':
+          description: View of a post
+        '404':
+          description: Post no found
+    put:
+      tags:
+        - Posts
+      description: 
+        Update post using id.
+      requestBody:
+        description: Update a property on the post.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ./post.json#/updatePost
+      responses:
+        '200':
+          description: Confirm and return id.
+        '401':
+          description: Updating a post requires login.
+        '403':
+          description: User does not own this post or is not an Admin.
+        '500':
+          description: Error when updating post
+    delete:
+      tags:
+        - Posts
+      description: 
+        Delete a post using id
+      responses:
+        '200':
+          description: Confirmation of deletion
+        '401':
+          description: Deleting a post requires login.
+        '403':
+          description: User does not own this post or is not Admin.
+        '404':
+          description: Post not found
+
+  
+  /comments:
+    summary: Represents a comment
+    description: >
+      This resource represents an induvidual comment in the system
+      Each comment is identified by its `id`.
+    put:
+      tags:
+        - Comments
+      description: 
+        Update a comment.
+      requestBody:
+        description: Update a visible property
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ./comment.json#/comment
+      responses:
+        '200':
+          description: Comment updated
+        '401':
+          description: Updating a comment requires login.
+        '403':
+          description: User is not owner of comment or is not Admin.
+        '404':
+          description: Comment not found
+    delete:
+      tags:
+        - Comments
+      description:
+        Delete a comment
+      responses:
+        '200':
+          description: Confirmation of deletion
+        '401':
+          description: Deleting a comment requires login.
+        '403':
+          description: User is not owner of comment or is not Admin.
+        '404':
+          description: Comment not found
+  
+  /posts/{id}/comments:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: Id of the post
+    get:
+      tags:
+        - Comments
+      description: 
+        Get all comments for post
+      responses:
+        '200':
+          description: View of comments for that post
+        '404':
+          description: No comments found on that post
+    post:
+      tags:
+        - Comments
+      description:
+        Create a comment for post
+      responses:
+        '201':
+          description: Comment created
+        '401':
+          description: Creating comments requires login.
+        '500':
+          description: Error when creating comment
+
+
+  /posts/{id}/likes:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+        description: Id of the post
+    get:
+      tags:
+        - Likes
+      description:
+        Get likes for post
+      responses:
+        '200':
+          description: Count of likes for post
+        '404':
+          description: Post not found
+    post:
+      tags:
+        - Likes
+      description:
+        Add like to a post
+      responses:
+        '201':
+          description: Like created
+        '401':
+          description: Liking requires login
+        '500':
+          description: Error adding like
+    delete:
+      tags:
+        - Likes
+      description:
+        Remove like from post
+      responses:
+        '200':
+          decriptions: Like removed
+        '401':
+          description: Unliking requires login
+        '500':
+          description: Error when unliking post
+

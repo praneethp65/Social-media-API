@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+
+    "comment" : {
+        "id": "#comment",
+        "title": "Comment",
+        "description": "Data required to make and update a comment",
+        "type": "object",
+        "properties": {
+            "allText": {
+                "description": "Body text of the comment",
+                "type": "string"
+            }
+            
+        },
+        "required" : ["allText"]
+    }
+
+   
+}

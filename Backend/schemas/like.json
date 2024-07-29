@@ -1,0 +1,20 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	
+    "like": {
+        "id": "#like",
+	"title": "Like",
+	"description": "A like on a post",
+	"type": "object",
+	"properties": {
+		"postID": {
+			"description": "ID of post like is for",
+			"type": "integer"
+		},
+		"authorID": {
+			"description": "ID of author of like",
+			"type": "integer"
+		}
+	}
+    }
+}
